@@ -365,9 +365,11 @@ spawn(function()
                                 "BalloonGifts_BalloonHit")
                                 :FireServer(unpack(args))
                         end
+                        spawn(function()
                         if tick() - old >= minskipballoon * 60 then
                             v:Destroy()
                         end
+                    end)
                     until not v:FindFirstChild("Balloon") or not v or not v.Parent
                 end)
             end
