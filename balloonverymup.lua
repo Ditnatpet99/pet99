@@ -280,15 +280,18 @@ local function j()
     local old = tick()
     local b = game:GetService("Workspace").__THINGS.Orbs:GetChildren()
     local c = game:GetService("Workspace").__THINGS.Lootbags:GetChildren()
-    local q = getsenv(a.PlayerScripts.Scripts.Game:WaitForChild("Lootbags Frontend")).Claim
     local d = {}
-    b.ChildAdded:Connect(function(v)
+    for a, b in b do
         d[a] = tonumber(b.Name)
-        v:Destroy()
-    end)
-    c.ChildAdded:Connect(function(v)
-        q(v.Name)
-    end)
+        b:Destroy()
+    end
+    if #c > 0 and q then
+        for i, a in c do
+            q(a.Name)
+        end
+    elseif not q then
+        q = getsenv(a.PlayerScripts.Scripts.Game:WaitForChild("Lootbags Frontend")).Claim
+    end
     if #b > 0 then
         i["Orbs: Collect"]:FireServer(d)
     end
