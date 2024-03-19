@@ -196,24 +196,25 @@ local function Teleportserverless(maxplayerr)
         end
     end)
 end
+function checkempty()
+    for i, v in pairs(workspace.__THINGS.BalloonGifts:GetChildren()) do
+        if v:FindFirstChild("Balloon") or i ~= nil or v ~= nil then
+            return false
+        else
+            return true
+        end
+    end
+end
+
 spawn(function()
     while wait() do
         local empty = true
         local old = tick()
-
         repeat
             wait(1)
-            local empty = true
 
-            for i, v in pairs(workspace.__THINGS.BalloonGifts:GetChildren()) do
-                if v:FindFirstChild("Balloon") or i ~= nil or v ~= nil then
-                    empty = false
-                    break
-                end
-            end
-        until not empty or (tick() - old) >= (min * 60)
-
-        if empty and (tick() - old) >= (min * 60) then
+        until not checkempty() or (tick() - old) >= (min * 60)
+        if  checkempty() then
             Teleportserverless(math.random(1, 3))
         end
     end
@@ -361,10 +362,10 @@ spawn(function()
                                 "BalloonGifts_BalloonHit")
                                 :FireServer(unpack(args))
                         end
-                        if tick()-old >= minskipballoon * 60 then 
+                        if tick() - old >= minskipballoon * 60 then
                             v:Destroy()
                         end
-                    until not v:FindFirstChild("Balloon") or not v or not v.Parent 
+                    until not v:FindFirstChild("Balloon") or not v or not v.Parent
                 end)
             end
             break
