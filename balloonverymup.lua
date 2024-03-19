@@ -213,7 +213,7 @@ spawn(function()
             end
         until not empty or (tick() - old) >= (min * 60)
 
-        if empty then
+        if empty and (tick() - old) >= (min * 60) then
             Teleportserverless(math.random(1, 3))
         end
     end
