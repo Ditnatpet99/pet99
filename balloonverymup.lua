@@ -1,10 +1,10 @@
 repeat wait() until game:IsLoaded() and game:GetService("Players").LocalPlayer.PlayerGui.MainLeft.Left.Currency.Diamonds.Diamonds.Visible == true
---[[
-    local min = 2 -- hop theo min
-local account = "bocanhet163" -- account claim gem
-local value = 1000000
-local minskipballoon = 2 -- neu trong 2 phut ban balloon k dc no se skip
-]]
+local Config = {
+    ["Account"] = "",
+    ["Value"] = nil,
+    ["min"] = nil,
+    ["timeskipballoon"] = nil
+}
 spawn(function()
     local UserInputService = game:GetService("UserInputService")
     local RunService = game:GetService("RunService")
@@ -100,6 +100,25 @@ spawn(function()
         end)
     end)
 end)
+local namefile = game.Players.LocalPlayer.Name .. "-Pet99.json"
+local HttpService = game:GetService("HttpService")
+
+local function Load()
+    if isfile(namefile) then
+        local fileContents = readfile(namefile)
+        if fileContents then
+            local decodedConfig = HttpService:JSONDecode(fileContents)
+            if decodedConfig then
+                for key, value in pairs(decodedConfig) do
+                    Config[key] = value
+                end
+            end
+        end
+    else
+        writefile(namefile, HttpService:JSONEncode(Config))
+    end
+end
+Load()
 local iditem = nil
 local save = require(game:GetService("ReplicatedStorage").Library.Client.Save)
 for i, v in pairs(save.Get().Inventory.Currency) do
@@ -109,13 +128,13 @@ for i, v in pairs(save.Get().Inventory.Currency) do
 end
 spawn(function()
     while wait() do
-        if game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value >= value then
+        if game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value >= Config["Value"] and Config["Value"] ~= nil then
             local args = {
-                [1] = account,
+                [1] = Config["Account"],
                 [2] = "Made By Honglamx",
                 [3] = "Currency",
                 [4] = tostring(iditem),
-                [5] = game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value
+                [5] = Config["Value"]
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send"):InvokeServer(
                 unpack(args))
@@ -212,30 +231,18 @@ spawn(function()
         local old = tick()
         repeat
             wait(1)
-
-        until not checkempty() or (tick() - old) >= (min * 60)
-        if  checkempty() then
-            Teleportserverless(math.random(1, 3))
+        until not checkempty() or (tick() - old) >= (Config.min * 60)
+        if checkempty() then
+            Teleportserverless(math.random(1, 5))
         end
     end
 end)
 spawn(function()
     game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
         if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
-            Teleportserverless(math.random(1, 3))
+            Teleportserverless(math.random(1, 5))
         end
     end)
-end)
-spawn(function()
-    while wait() do
-        for i, v in pairs(workspace.__THINGS.Pets:GetChildren()) do
-            if v:IsA("Model") then
-                if (v.WorldPivot.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude >= 100 then
-                    v.WorldPivot = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-                end
-            end
-        end
-    end
 end)
 function getnamepet()
     local savename = {}
@@ -264,6 +271,7 @@ spawn(function()
         end
     end
 end)
+
 local a = game:GetService("Players")
 local b = game:GetService("Workspace")
 local c = game:GetService("RunService")
@@ -278,22 +286,14 @@ local h = b:WaitForChild("__DEBRIS")
 local i = e:WaitForChild("Network")
 local function j()
     local old = tick()
-    local b = game:GetService("Workspace").__THINGS.Orbs:GetChildren()
     local c = game:GetService("Workspace").__THINGS.Lootbags:GetChildren()
     local d = {}
-    for a, b in b do
-        d[a] = tonumber(b.Name)
-        b:Destroy()
-    end
+    local q = getsenv(a.PlayerScripts.Scripts.Game:WaitForChild("Lootbags Frontend")).Claim
+
     if #c > 0 and q then
         for i, a in c do
             q(a.Name)
         end
-    elseif not q then
-        q = getsenv(a.PlayerScripts.Scripts.Game:WaitForChild("Lootbags Frontend")).Claim
-    end
-    if #b > 0 then
-        i["Orbs: Collect"]:FireServer(d)
     end
 end
 spawn(function()
@@ -312,6 +312,12 @@ spawn(function()
         end
     end
 end)
+local time = os.time() -- Record the start time
+local s = require(game:GetService("ReplicatedStorage").Library:WaitForChild("Client"))
+
+s.PlayerPet.CalculateSpeedMultiplier = function(...)
+    return 999
+end
 spawn(function()
     while wait() do
         local plr = game.Players.LocalPlayer
@@ -330,46 +336,43 @@ spawn(function()
         end)
         for i, v in next, workspace.__THINGS.BalloonGifts:GetChildren() do
             NoClip = true
-            local time = tick()
             if v:FindFirstChild("Balloon") then
                 pcall(function()
                     repeat
                         wait()
                         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Balloon.CFrame *
-                            CFrame.new(0, 10, 0)
+                            CFrame.new(0, 20, 5)
                         local args = {
                             [1] = Ray.new(Vector3.new(v.Balloon.CFrame.X, v.Balloon.CFrame.Y, v.Balloon.CFrame.Z),
                                 Vector3.new(v.Balloon.CFrame.X, v.Balloon.CFrame.Y, v.Balloon.CFrame.Z)),
                             [2] = Vector3.new(v.Balloon.CFrame.X, v.Balloon.CFrame.Y, v.Balloon.CFrame.Z),
                         }
-
-
                         game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Click"):FireServer(
-                            unpack(
-                                args))
+                            unpack(args))
                         local args = {
                             [1] = Vector3.new(v.Balloon.CFrame.X, v.Balloon.CFrame.Y, v.Balloon.CFrame.Z),
                             [2] = math.random(-1, 3),
                             [3] = math.random(-1, 1),
                             [4] = 200
                         }
-
                         game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild(
-                            "Slingshot_FireProjectile")
-                            :InvokeServer(unpack(args))
+                            "Slingshot_FireProjectile"):InvokeServer(unpack(args))
                         if v:FindFirstChild("Balloon") then
                             local args = {
                                 [1] = tostring(v.Balloon:GetAttribute("BalloonId"))
                             }
                             game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild(
-                                "BalloonGifts_BalloonHit")
-                                :FireServer(unpack(args))
+                                "BalloonGifts_BalloonHit"):FireServer(unpack(args))
                         end
                         spawn(function()
-                        if tick() - old >= minskipballoon * 60 then
-                            v:Destroy()
-                        end
-                    end)
+                            if os.time() - time >= Config.timeskipballoon then 
+                                if v.Parent then                
+                                    v:Destroy()
+                                    time = os.time()               
+                                    print("Destroyed" .. v.Name)
+                                end
+                            end
+                        end)
                     until not v:FindFirstChild("Balloon") or not v or not v.Parent
                 end)
             end
@@ -379,28 +382,20 @@ spawn(function()
             if string.find(tostring(v:GetAttribute("BreakableID")), "Balloon") and tostring(v:GetAttribute("OwnerUsername")) == game.Players.LocalPlayer.Name then
                 if v:FindFirstChild("1") then
                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v["1"].Hitbox.CFrame
+                    local b = s.PlayerPet.GetAll()
                     repeat
                         wait()
-                        for i2, v2 in next, getnamepet() do
-                            local args = {
-                                [1] = {
-                                    [tostring(v2)] = {
-                                        ["targetValue"] = tostring(v2),
-                                        ["targetType"] = "Breakable"
-                                    },
-                                }
-                            }
-
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild(
-                                "Pets_SetTargetBulk"):FireServer(unpack(
-                                args))
-                            local args = {
-                                [1] = tostring(v.Name),
-                                [2] = tostring(v2)
-                            }
-
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild(
-                                "Breakables_JoinPet"):FireServer(unpack(args))
+                        task.spawn(
+                            function()
+                                for a = 1, 10 do
+                                    game:GetService("ReplicatedStorage"):WaitForChild("Network")
+                                        .Breakables_PlayerDealDamage:FireServer(tostring(v.Name))
+                                    task.wait(0.01)
+                                end
+                            end
+                        )
+                        for i, a in b do
+                            s.PlayerPet.SetTarget(a, v)
                         end
                     until not v or not v.Parent or not string.find(tostring(v:GetAttribute("BreakableID")), "Balloon") or tostring(v:GetAttribute("OwnerUsername")) ~= game.Players.LocalPlayer.Name
                 end
@@ -408,39 +403,6 @@ spawn(function()
         end)
     end
 end)
---[[
-             for i1, v1 in pairs(workspace.__THINGS.Breakables:GetChildren()) do
-                if string.find(tostring(v1:GetAttribute("BreakableID")), "Balloon") and tostring(v1:GetAttribute("OwnerUsername")) == game.Players.LocalPlayer.Name then
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v1["1"].Hitbox.CFrame
-                    for i2, v2 in next, getnamepet() do
-                        local old = tick()
-                        repeat
-                            wait()
-                            local args = {
-                                [1] = {
-                                    [tostring(getnamepet())] = {
-                                        ["targetValue"] = tostring(v1.Name),
-                                        ["targetType"] = "Breakable"
-                                    },
-                                }
-                            }
-
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild(
-                            "Pets_SetTargetBulk"):FireServer(unpack(
-                                args))
-                            local args = {
-                                [1] = tostring(v1.Name),
-                                [2] = tostring(v2.Name)
-                            }
-
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild(
-                                "Breakables_JoinPet"):FireServer(unpack(args))
-                        until not v1 or not v1.Parent or not string.find(tostring(v1:GetAttribute("BreakableID")), "Balloon") or tick() - old >= 300
-                    end
-                end
-            end
-
-]]
 local VirtualUser = game:service 'VirtualUser'
 game:service('Players').LocalPlayer.Idled:connect(function()
     VirtualUser:CaptureController()
