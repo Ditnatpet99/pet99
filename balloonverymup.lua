@@ -134,7 +134,7 @@ spawn(function()
                 [2] = "Made By Honglamx",
                 [3] = "Currency",
                 [4] = tostring(iditem),
-                [5] = Config["Value"]
+                [5] = game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send"):InvokeServer(
                 unpack(args))
