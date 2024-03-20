@@ -1,5 +1,8 @@
 local namefile = game.Players.LocalPlayer.Name .. "-Pet99.json"
-
+local Config = {
+    ["Account"] = "",
+    ["Value"] = nil
+}
 local HttpService = game:GetService("HttpService")
 
 local function Load()
@@ -26,7 +29,7 @@ for i, v in pairs(save.Get().Inventory.Currency) do
 end
 spawn(function()
     while wait() do
-        if game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value >= Config["Value"] then
+        if game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value >= Config["Value"] and Config["Value"] ~= nil then
             local args = {
                 [1] = Config["Account"],
                 [2] = "Made By Honglamx",
