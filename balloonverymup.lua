@@ -119,25 +119,32 @@ local function Load()
     end
 end
 Load()
-local iditem = nil
-local save = require(game:GetService("ReplicatedStorage").Library.Client.Save)
-for i, v in pairs(save.Get().Inventory.Currency) do
-    if v.id == "Diamonds" then
-        iditem = i
-    end
-end
+
 spawn(function()
     while wait() do
-        if game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value >= Config["Value"] and Config["Value"] ~= nil then
+        local save = require(game:GetService("ReplicatedStorage").Library.Client.Save)
+        local iditem = nil
+        for i, v in pairs(save.Get().Inventory.Currency) do
+            if v.id == "Diamonds" then
+                iditem = i
+                break
+            end
+        end
+
+        local playerDiamonds = tonumber(game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"]
+        .Value)
+        local requiredDiamonds = tonumber(Config["Value"])
+
+        if playerDiamonds and requiredDiamonds and playerDiamonds >= requiredDiamonds then
             local args = {
                 [1] = Config["Account"],
                 [2] = "Made By Honglamx",
                 [3] = "Currency",
                 [4] = tostring(iditem),
-                [5] = game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value
+                [5] = playerDiamonds
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send"):InvokeServer(
-                unpack(args))
+            unpack(args))
         end
     end
 end)
@@ -365,10 +372,10 @@ spawn(function()
                                 "BalloonGifts_BalloonHit"):FireServer(unpack(args))
                         end
                         spawn(function()
-                            if os.time() - time >= Config.timeskipballoon then 
-                                if v.Parent then                
+                            if os.time() - time >= Config.timeskipballoon then
+                                if v.Parent then
                                     v:Destroy()
-                                    time = os.time()               
+                                    time = os.time()
                                     print("Destroyed" .. v.Name)
                                 end
                             end
@@ -403,6 +410,7 @@ spawn(function()
         end)
     end
 end)
+print(Config.timeskipballoon)
 local VirtualUser = game:service 'VirtualUser'
 game:service('Players').LocalPlayer.Idled:connect(function()
     VirtualUser:CaptureController()
