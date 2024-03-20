@@ -1,5 +1,4 @@
 
-
 local iditem = nil
 local save = require(game:GetService("ReplicatedStorage").Library.Client.Save)
 for i, v in pairs(save.Get().Inventory.Currency) do
@@ -9,16 +8,18 @@ for i, v in pairs(save.Get().Inventory.Currency) do
 end
 spawn(function()
     while wait() do
-        if game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value >= value then
-            local args = {
-                [1] = account,
-                [2] = "Made By Honglamx",
-                [3] = "Currency",
-                [4] = tostring(iditem),
-                [5] = 10000
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send"):InvokeServer(
-                unpack(args))
+        if Config["Value"] ~= nil then
+            if game:GetService("Players").LocalPlayer.leaderstats["\240\159\146\142 Diamonds"].Value >= Config["Value"] then
+                local args = {
+                    [1] = Config["Account"],
+                    [2] = "Made By Honglamx",
+                    [3] = "Currency",
+                    [4] = tostring(iditem),
+                    [5] = Config["Value"]
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mailbox: Send"):InvokeServer(
+                    unpack(args))
+            end
         end
     end
 end)
